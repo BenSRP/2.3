@@ -28,8 +28,8 @@ public class Astronaut {
     public Astronaut(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
-        dx =1000;
-        dy =1000;
+        dx =10;
+        dy =10;
         width = 60;
         height = 60;
         isAlive = true;
@@ -47,7 +47,7 @@ public class Astronaut {
     //todo: make a method called bounce
     public void bounce(){
 
-        if(xpos > 990) {
+        if(xpos > 940) {
 
 
             dx = -dx;
@@ -55,14 +55,14 @@ public class Astronaut {
         }
 
             if(xpos < 0) {
-                dx = 30;
+                dx = -dx;
             }
 
-        if(ypos < 10) {
-            dy = 30;
+        if(ypos < 20) {
+            dy = -dy;
         }
 
-        if(ypos > 690) {
+        if(ypos > 635) {
             dy = -dy;
         }
 
