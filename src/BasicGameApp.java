@@ -15,6 +15,7 @@
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
+import java.sql.SQLOutput;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -25,9 +26,9 @@ import javax.swing.JPanel;
 public class BasicGameApp implements Runnable {
 
    //Variable Definition Section
-   //Declare the variables used in the program 
+   //Declare the variables used in the program
    //You can set their initial values too
-   
+
    //Sets the width and height of the program window
 	final int WIDTH = 1000;
 	final int HEIGHT = 700;
@@ -36,7 +37,7 @@ public class BasicGameApp implements Runnable {
 	public JFrame frame;
 	public Canvas canvas;
    public JPanel panel;
-   
+
 	public BufferStrategy bufferStrategy;
 	public Image astroPic;
 
@@ -44,6 +45,7 @@ public class BasicGameApp implements Runnable {
    //These are things that are made up of more than one variable type
 	public Astronaut astro;
 	public Astronaut astro2;
+	public Astronaut astro3;
 
 	public int randdy;
 
@@ -60,24 +62,31 @@ public class BasicGameApp implements Runnable {
    // This section is the setup portion of the program
    // Initialize your variables and construct your program objects here.
 	public BasicGameApp() {
-      
+
       setUpGraphics();
-       
+
       //variable and objects
-      //create (construct) the objects needed for the game and load up 
+      //create (construct) the objects needed for the game and load up
 		astroPic = Toolkit.getDefaultToolkit().getImage("astronaut.png"); //load the picture
 		astro = new Astronaut(10,100);
 		astro2 = new Astronaut(20, 50);
+		astro3 = new Astronaut(30, 100);
 		System.out.println(astro.dx);
-		astro.dx = 5;
+		astro.dx = 10;
 
 		randdy = ((int)Math.random () * 500) +1;
 		astro2.dx = randdy;
 		astro2.dy = randdy;
 
+		randdy = ((int)Math.random () * 500) +1;
+		astro3.dx = randdy;
+		astro3.dy = randdy;
+		astro3.xpos = randdy;
+		astro3.ypos = randdy;
+
 	}// BasicGameApp()
 
-   
+
 //*******************************************************************************
 //User Method Section
 //
@@ -102,12 +111,29 @@ public class BasicGameApp implements Runnable {
       //calls the move( ) code in the objects
 		astro.move();
 		astro2.move();
-
+		astro3.move();
+crashing();
 
 	}
 
+	public void crashing() {
+		if (astro.hitbox.intersects(astro2.hitbox) && astro.iscrashing == false ){
+			System.out.println("crash");
+			astro.dy = astro.dy +5;
+			astro.height = astro.height + 1;
+			astro.width = astro.width + 1;
+			astro.iscrashing = false;
+			System.out.println(astro.iscrashing);
 
 
+		}
+
+		if (!astro.hitbox.intersects(astro2.hitbox)) {
+			astro.iscrashing = false;
+			//System.out.println("True");
+
+		}
+	}
 
    //Pauses or sleeps the computer for the amount specified in milliseconds
    public void pause(int time ){
@@ -122,31 +148,31 @@ public class BasicGameApp implements Runnable {
    //Graphics setup method
    private void setUpGraphics() {
       frame = new JFrame("Application Template");   //Create the program window or frame.  Names it.
-   
+
       panel = (JPanel) frame.getContentPane();  //sets up a JPanel which is what goes in the frame
       panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));  //sizes the JPanel
       panel.setLayout(null);   //set the layout
-   
+
       // creates a canvas which is a blank rectangular area of the screen onto which the application can draw
       // and trap input events (Mouse and Keyboard events)
-      canvas = new Canvas();  
+      canvas = new Canvas();
       canvas.setBounds(0, 0, WIDTH, HEIGHT);
       canvas.setIgnoreRepaint(true);
-   
+
       panel.add(canvas);  // adds the canvas to the panel.
-   
+
       // frame operations
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //makes the frame close and exit nicely
       frame.pack();  //adjusts the frame and its contents so the sizes are at their default or larger
       frame.setResizable(false);   //makes it so the frame cannot be resized
       frame.setVisible(true);      //IMPORTANT!!!  if the frame is not set to visible it will not appear on the screen!
-      
+
       // sets up things so the screen displays images nicely.
       canvas.createBufferStrategy(2);
       bufferStrategy = canvas.getBufferStrategy();
       canvas.requestFocus();
       System.out.println("DONE graphic setup");
-   
+
    }
 
 
@@ -158,6 +184,10 @@ public class BasicGameApp implements Runnable {
       //draw the image of the astronaut
 		g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
 		g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
+		g.drawImage(astroPic, astro3.xpos, astro3.ypos, astro3.width, astro3.height, null);
+		g.drawRect(astro.hitbox.x, astro.hitbox.y, astro.hitbox.width, astro.hitbox.width);
+		g.drawRect(astro2.hitbox.x, astro2.hitbox.y, astro2.hitbox.width, astro2.hitbox.width);
+
 
 		//end coding here
 		g.dispose();
